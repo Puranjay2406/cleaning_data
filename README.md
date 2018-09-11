@@ -1,4 +1,4 @@
-#read data
+##read data
 data.test.x <- read.table('X_test.txt')
 data.test.activity <- read.csv('y_test.txt', header = FALSE, sep = ' ')
 data.test.subject <- read.csv('subject_test.txt',header = FALSE, sep = ' ')
