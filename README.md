@@ -1,42 +1,11 @@
-##read data
-data.test.x <- read.table('X_test.txt')
-data.test.activity <- read.csv('y_test.txt', header = FALSE, sep = ' ')
-data.test.subject <- read.csv('subject_test.txt',header = FALSE, sep = ' ')
+# Getting and cleaning data project
 
-data.test <-  data.frame(data.test.subject, data.test.activity, data.test.x)
+## The R script, run_analysis.R, cleans the dataset than summarises it on 7 steps as follows :
 
-data.train.x <- read.table('X_train.txt')
-data.train.activity <- read.csv('y_train.txt', header = FALSE, sep = ' ')
-data.train.subject <- read.csv('subject_train.txt',header = FALSE, sep = ' ')
-
-data.train <-  data.frame(data.train.subject, data.train.activity, data.train.x)
-#combine Data
-train_test<-rbind(data.train,data.test)
-#add headings and select mean and std
-name<-read.csv("features.txt",header = FALSE,sep = " ")
-names(train_test)<-c(c("subject","activity"),name)
-x<-grep('std|mean',names(train_test))
-poi<-train_test[,c(1,2,x)]
-#meaning of activity
-poi$activity<-gsub("5","STANDING",poi$activity)
-poi$activity<-gsub("6","LAYING",poi$activity)
-poi$activity<-gsub("4","SITTING",poi$activity)
-poi$activity<-gsub("3","WALKING_DOWNSTAIRS",poi$activity)
-poi$activity<-gsub("2","WALKING_UPSTAIRS",poi$activity)
-poi$activity<-gsub("1","WALKING",poi$activity)
-#clean names(poi) to readable format
-x<-names(poi)
-x<-gsub("[(][)]", "",x)
-x<-gsub("Acc", "Accleration",x)
-x<-gsub("Gyro", "Gyroscope",x)
-x<-gsub("Mag", "Magnitude",x)
-x<-gsub("Freq", "Frequency",x)
-x<-gsub("std", "standard_deviation",x)
-x<-gsub("^t", "Time_Domain",x)
-x<-gsub("^f", "Frequency_Domain",x)
-names(poi)<-x
-z<-aggregate(poi[,4:81], by = list(activity = poi$activity, subject = poi$subject),FUN = mean)
-write.table(z,"data_cleaned.txt", row.names = FALSE)
-
-
-
+- Step1:downloads the dataset and unzip it in a defined directory 
+- step2:loads the activity labels and the features files 
+- step3:selects the names of only needed measurements on the mean and standard deviation from features file 
+- step4:change the names of the selected variables to be more readable and corrects typos
+- step5:loads the datasets of train and test which have only the selected variables
+- step6:merges the datasets and modifies the columns names
+- step7:summarises the tidy dataset using dplyr to get the average of each variable for each activity and each subject
